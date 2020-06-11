@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}
+product {{item}}
+{% endblock %}
+{% block content %}
+<body style="background-color:#FFCC99" style='color: black';>
+<p> 
+<br>
+<center>
+Searched product is {{item}}
+</center>
+<br>
+<center>
+{% if nrunverified !="none" %}
+Number of reviews before trimming {{nr_before + nrunverified}}
+{% endif %}
+{% if nrunverified=="none" %}
+Numbers of reviews before trimming {{nr_before}}
+{% endif%}
+</center>
+<br>
+<center>
+Number of reviews after trimming 
+{% if flagunverified==1 %}
+{{ nr_after }}
+{% endif %}
+{% if flagunverified==0 %}
+{% if nrunverified!="none" %}
+{{ nr_after + nrunverified }}
+{% endif %}
+{% if nrunverified=="none" %}
+{{ nr_after }}
+{% endif %}
+{% endif %}
+</center>
+<br>
+<center>
+Average score before trimming {{average_before}}
+</center>
+<br> 
+<center>
+Average score after trimming {{average_after}}
+</center>
+<center>
+
+ <table >
+  <tr>
+    <th>Grade Criteria</th>
+    <th>Results</th>
+  </tr>
+  <tr>
+    <td> Word Count </td>
+    <td> {% if wordcountresult[0]!="none" %} 
+	{% for i in range(nrbins) %}
+		Bin number {{ wordcountresult[i] }} |
+	{% endfor %}
+	 {% endif %}
+	{% if wordcountresult[0]=="none" %}
+	 No weird bins compared to the category distribution
+ 	{% endif %}
+    </td>
+  </tr>
+<br>
+  <tr>
+    <td> Rating Trend </td>
+    <td>{% if ratingtrendresult[0]!="none" %} 
+	{% for i in range(nrdays) %}
+		{% if i%5==0 %}
+			{% if i!=0 %}
+				<br>
+			{% endif %}
+		{% endif %}
+		Day {{ ratingtrendresult[i] }} |
+	{% endfor %}
+	{% endif %}
+	{% if ratingtrendresult[0]=="none" %}
+		No days with weird activity compared to the rest
+	{% endif %}
+    </td>
+  </tr>
+<br>
+  <tr>
+    <td> User Ease <br> For Category </td>
+    <td> {{c_ease}} </td>
+  </tr>
+<br>
+  <tr>
+    <td> User With <br> Overlapping History  </td>
+    <td>{% if overlappingusers!= "none" %}
+	{% for i in range(nroverlapusers)%} 
+		{% if i%3==0 %}
+			{% if i!=0 %}
+				<br>
+			{% endif %}
+		{% endif %}
+		{{overlappingusers[i]}}
+	 {% endfor %}
+	 {% if overlapflag==1 %}
+		{% if nroverlapusers %3!=2 %}
+		which we have removed.
+		{% endif %}
+		{% if nroverlapusers %3==2 %}
+		<br>
+		which we hace removed.
+		{% endif %}
+	 {% endif %}
+	 {% if overlapflag==0 %}
+		{% if nroverlapusers %3!=2 %}
+		which we have not removed.
+		{% endif %}
+		{% if (nroverlapusers %3==2) %}
+		<br>
+		which we have not removed.
+		{% endif %}
+	 {% endif %}
+	 {% endif %}
+	{% if overlappingusers=="none" %}
+		No users with overlapping history
+	{% endif %}
+    </td>
+  </tr>
+<br>
+  <tr>
+    <td> Unverified Reviews </td>
+    <td>{% if flagunverified == 1%}
+		We have removed a number of {{nrunverified}} unverified reviews.
+	{% endif %}
+	{% if flagunverified == 0 %}
+		{% if nrunverified!=0%}
+		We have a number of {{nrunverified}} unverified reviews <br> but they don't influence the result
+		{% endif %}
+		{% if nrunverified==0%}
+		We don't have any unverified reviews.
+		{% endif %}
+	{% endif %}
+    </td>
+  </tr>
+<br>
+  <tr>
+    <td> Incentivised results </td>
+    <td>{% if flagincentivise == 1 %}
+		We have removed a number of {{nrincentivise}} incentivised reviews.
+	{% endif %}
+	{% if flagincentivise == 0 %}
+		{% if nrincentivise!= 0%}
+		We have a number of {{nrincentivise}} incentivised reviews <br> but they don't influence the result
+		{% endif %}
+		{% if nrincentivise== 0%}
+		We don't have any incentivised reviews
+		{% endif %}
+	{% endif %}
+    </td>
+  </tr>
+<br>
+  <tr>
+  <td> Suspicious users </td>
+	<td> {% if nrsuspicioususers!=0 %}
+		We have modified the grade for these users:
+		{% for i in range(nrsuspicioususers) %}
+			{{suspicioususers[i]}} ,
+			{% if i%5==0 %}
+				<br>
+			{% endif %}
+		{% endfor %}
+	     {% endif %}
+	     {% if nrsuspicioususers==0 %}
+			We don't have any particular suspicious users
+	     {% endif %}
+	</td>
+  </tr>
+</table> 
+
+</center>
+<center>
+<br>
+<br>
+{% if img1!="none" %}
+<img src="/static/{{img1}}" >
+{% endif %}
+{% if img2!="none" %}
+<img src="/static/{{img2}}" >
+{% endif %}
+</center>
+</p>
+</body>
+{% endblock %}
+
+
